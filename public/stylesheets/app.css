@@ -1,0 +1,42 @@
+body {
+  padding-top: 50px;
+}
+
+ul[dnd-list], ul[dnd-list] > li {
+    position: relative;
+}
+
+ul[dnd-list] {
+    min-height: 50px;
+    margin: 0px;
+    padding-left: 0px;
+}
+
+ul
+{
+   list-style-type: none; 
+}
+
+li
+{
+    display: inline;
+    
+}
+
+.playerlist {
+    min-height: 50px !important;
+}
+
+.playerlist > li {
+    background-color: #337ab7;
+    border: none;
+    border-radius: .25em;
+    color: #fff;
+    float: left;
+    font-weight: 700;
+    height: 50px;
+    margin: 5px;
+    padding: 3px;
+    text-align: center;
+    width: 100px;
+}

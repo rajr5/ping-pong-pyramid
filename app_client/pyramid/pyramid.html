@@ -1,0 +1,20 @@
+<div class="row" style="margin-left:{{tier.offset}}%;" ng-repeat="tier in vm.tiers">
+    <ul dnd-list="tier.players" 
+        dnd-horizontal-list="true" 
+        dnd-allowed-types="tier.allowedDrag"
+        dnd-dragover="vm.playerDropCheck(event, index, type, tier)"
+        dnd-drop="vm.playerDropped(event, index, item, type, tier)"
+        class="playerlist">
+            <li ng-repeat="player in tier.players" 
+                dnd-draggable="player" 
+                dnd-effect-allowed="move" 
+                dnd-type="tier.tier" 
+                dnd-moved="vm.playerMoved(event, $index, player, tier)"
+                dnd-moved="items.splice($index, 1); logEvent('Item moved', event)">
+                <span ng-class="player.class">{{player.screenName}}</span>
+            </li>
+    </ul>
+</div>
+
+
+
