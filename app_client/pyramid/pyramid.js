@@ -8,26 +8,27 @@
   PyramidController.$inject = ['logger'];
   function PyramidController(logger) {
     var vm = this;
+    
     vm.playerDropCheck = playerDropCheck;
     vm.playerDropped = playerDropped;
     vm.playerMoved = playerMoved;
     vm.clearAllCss = clearAllCss;
+    
+    vm.playerMovesHistory = [];
+    
     activate();
 
     ////////////////
 
   function activate() {
     vm.tiers = getTiers();
+    setPlayerTierAndPosition(vm.tiers);
     logger.info('tiers', vm.tiers);
   }
   
+  // Determine if player can be dropped into dragged location
   function playerDropCheck(event, index, type, tier) {
-    // logger.info('playerDropCheck()');
-    // logger.info('event', event);
-    // logger.info('index', index);
-    // logger.info('type', type);
-    // logger.info('tier', tier);
-    
+   
     // index = index in player list
     // type = type 
     logger.info('tier.allowedDrag.indexOf(type)', tier.allowedDrag.indexOf(type));
@@ -46,15 +47,9 @@
     }
   }
   
-
-  
+  // Swap players once player has been dropped
   function playerDropped(event, index, player, type, tier) {
-    logger.info('playerDropped()');
-    logger.info('event', event);
-    logger.info('index', index);
-    logger.info('player', player);
-    logger.info('type', type);
-    logger.info('tier', tier);
+
     clearAllCss();
     
     // on drop:
@@ -73,35 +68,41 @@
     
     // swap player positions
     tier.players[index] = player;
-    logger.info('replacedPlayer.tier', replacedPlayer.tier);
-    logger.info('replacedPlayer.position', replacedPlayer.position);
     
     vm.tiers[replacedPlayer.tier].players[replacedPlayer.position] = replacedPlayer;
-
-    logger.info('replacedPlayer', replacedPlayer);
-    logger.info('player', player);
-    logger.info('tier', tier);
-    logger.info('vm.tiers', vm.tiers);
+    // Log player move
+    savePlayerMoveHistory(replacedPlayer, player);
+    savePlayerMoveHistory(player, replacedPlayer);
+    
     return true;
   }
   
+  // Method callde once player has been moved
   function playerMoved(ev, index, player, tier) {
-    logger.info('playerMoved()');
-    logger.info('ev', ev);
-    logger.info('index', index);
-    logger.info('player', player);
-    logger.info('tier', tier);
 
+  }
+  
+  // Log that a player has been moved
+  function savePlayerMoveHistory(movedPlayer, replacedPlayer) {
+    var p = {};
+    p.player = movedPlayer;
+    p.replacedPlayer = replacedPlayer;
+    p.newTier = movedPlayer.tier;
+    p.oldTier = replacedPlayer.tier;
+    p.newPosition = movedPlayer.position;
+    p.oldPosition = replacedPlayer.position;
     
+    vm.playerMovesHistory.unshift(p);
   }
 
+  // Set all CSS classes back to default
   function clearAllCss() {
     vm.tiers.forEach(function(element) {
-      logger.info('element', element);
       setCss(element.players, -1);
     }, this);
   }
 
+  // Helper function to set CSS class when item is being dragged
   function setCss(players, index) {
     players.map(function(obj, idx, arr) {
       if(idx === index) {
@@ -110,6 +111,47 @@
         obj.class = 'label label-default';
       }
     });
+  }
+  
+  // Helper function to set tier and position on all players
+  function setPlayerTierAndPosition(tiers) {
+  //   for (var i = 0; i < tiers.length; i++) {
+  //     var t = tiers[i];
+
+  //     var offset;
+  //     var max;
+  //     var allowedDrag = [];
+  //     if (i = 0) {
+  //       offset = 5;
+  //       max = 1;
+  //       allowedDrag.push('1');
+  //     }else if (i = 1) {
+  //       offset = 4;
+  //       max = 2;
+  //       allowedDrag.push(['0','2']);
+  //     }else if (i = 2) {
+  //       offset = 3;
+  //       max = 4;
+  //       allowedDrag.push(['1', '3']);
+  //     } else {
+  //       offset = 2;
+  //       max = 100;
+  //       allowedDrag.push('2');
+  //     }
+      
+  //     t.label = 'Tier ' + i;
+  //     t.allowedDrag = allowedDrag;
+  //     t.tier = i.toString();
+  //     t.order = i;
+  //     t.max = max;
+  //     t.offset = offset;
+  //     for (var k = 0; k < t.players.length; k++) {
+  //       var p = t.players[k];
+  //       p.tier = i;
+  //       p.position = k;
+  //       p.class = 'label label-default';
+  //     }
+  //   }
   }
 
   function getTiers() {
@@ -120,7 +162,7 @@
         tier: '0',
         order: 0,
         max: 1,
-        offset: '40',
+        offset: 5,
         players: [
           {
             id: '43432243',
@@ -138,7 +180,7 @@
         tier: '1',
         order: 1,
         max: 2,
-        offset: '30',
+        offset: 4,
         players: [
           {
             id: '234243765',
@@ -164,8 +206,114 @@
       tier: '2',
       order: 2,
       max: 4,
-      offset: '20',
+      offset: 3,
       players: [
+          {
+            id: '1',
+            name: 'p11',
+            screenName: 'p1',
+            tier: 2,
+            position: 0,
+            class: 'label label-default'
+          },
+          {
+            id: '2',
+            name: 'p21',
+            screenName: 'p2',
+            tier: 2,
+            position: 1,
+            class: 'label label-default'
+          },
+          {
+            id: '3',
+            name: 'p31',
+            screenName: 'p3',
+            tier: 2,
+            position: 2,
+            class: 'label label-default'
+          },
+          {
+            id: '4',
+            name: 'p41',
+            screenName: 'p4',
+            tier: 2,
+            position: 3,
+            class: 'label label-default'
+          }
+        ]
+      },
+            {
+      label: "tier 3",
+      allowedDrag: ['2'],
+      tier: '3',
+      order: 3,
+      max: 8,
+      offset: 2,
+      players: [
+          {
+            id: '1',
+            name: 'p11',
+            screenName: 'p1',
+            tier: 2,
+            position: 0,
+            class: 'label label-default'
+          },
+          {
+            id: '2',
+            name: 'p21',
+            screenName: 'p2',
+            tier: 2,
+            position: 1,
+            class: 'label label-default'
+          },
+          {
+            id: '3',
+            name: 'p31',
+            screenName: 'p3',
+            tier: 2,
+            position: 2,
+            class: 'label label-default'
+          },
+          {
+            id: '4',
+            name: 'p41',
+            screenName: 'p4',
+            tier: 2,
+            position: 3,
+            class: 'label label-default'
+          },
+          {
+            id: '1',
+            name: 'p11',
+            screenName: 'p1',
+            tier: 2,
+            position: 0,
+            class: 'label label-default'
+          },
+          {
+            id: '2',
+            name: 'p21',
+            screenName: 'p2',
+            tier: 2,
+            position: 1,
+            class: 'label label-default'
+          },
+          {
+            id: '3',
+            name: 'p31',
+            screenName: 'p3',
+            tier: 2,
+            position: 2,
+            class: 'label label-default'
+          },
+          {
+            id: '4',
+            name: 'p41',
+            screenName: 'p4',
+            tier: 2,
+            position: 3,
+            class: 'label label-default'
+          },
           {
             id: '1',
             name: 'p11',

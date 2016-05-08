@@ -12,19 +12,18 @@ ul[dnd-list] {
     padding-left: 0px;
 }
 
-ul
-{
-   list-style-type: none; 
-}
-
 li
 {
     display: inline;
-    
+}
+
+.label {
+    font-size: 125%;
 }
 
 .playerlist {
-    min-height: 50px !important;
+    min-height: 55px !important;
+    /*width: 100%;*/
 }
 
 .playerlist > li {
@@ -34,9 +33,30 @@ li
     color: #fff;
     float: left;
     font-weight: 700;
-    height: 50px;
+    height: 75px;
     margin: 5px;
     padding: 3px;
     text-align: center;
+    padding-top: 10px;
+}
+
+
+.tier-0 {
+    width: 150px;
+}
+
+.tier-1 {
+    width: 125px;
+}
+
+.tier-2 {
     width: 100px;
+}
+
+.tier-3 {
+    width: 75px;
+}
+
+.tier-4 {
+    width: 75px;
 }

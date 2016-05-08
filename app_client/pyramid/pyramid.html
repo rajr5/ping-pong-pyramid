@@ -1,4 +1,6 @@
-<div class="row" style="margin-left:{{tier.offset}}%;" ng-repeat="tier in vm.tiers">
+
+<div class="row" ng-repeat="tier in vm.tiers">
+    <div ng-class="['col-xs-offset-'+{{tier.offset}}, 'col-xs-'+{{12-tier.offset}}]">
     <ul dnd-list="tier.players" 
         dnd-horizontal-list="true" 
         dnd-allowed-types="tier.allowedDrag"
@@ -9,12 +11,17 @@
                 dnd-draggable="player" 
                 dnd-effect-allowed="move" 
                 dnd-type="tier.tier" 
-                dnd-moved="vm.playerMoved(event, $index, player, tier)"
-                dnd-moved="items.splice($index, 1); logEvent('Item moved', event)">
+                ng-class="'tier-'+{{tier.tier}}">
                 <span ng-class="player.class">{{player.screenName}}</span>
             </li>
     </ul>
+    </div>
 </div>
 
+<hr>
 
-
+<ul class="list-group">
+    <li class="list-group-item" ng-repeat="p in vm.playerMovesHistory">
+        {{p.player.screenName}} changed from tier {{p.oldTier}} to tier {{p.newTier}}
+    </li>
+</ul>
